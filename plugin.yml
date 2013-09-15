@@ -16,7 +16,7 @@
 name: Skyauth
 main: com.skyost.auth.AuthPlugin
 description: An auth plugin.
-version: 0.4
+version: 0.3.1
 author: Skyost
 website: http://dev.bukkit.org/bukkit-plugins/skyauth/
 commands:

@@ -87,14 +87,16 @@ public class Listeners implements Listener {
 			}
 		}
 		else {
-			String message;
-			if(auth.config.Accounts.get(player.getName()) != null) {
-				message = auth.messages.Messages_14.replaceAll("/player/", event.getPlayer().getName());
-				player.sendMessage(message);
-			}
-			else {
-				message = auth.messages.Messages_13.replaceAll("/player/", event.getPlayer().getName());
-				player.sendMessage(message);
+			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
+				String message;
+				if(auth.config.Accounts.get(player.getName()) != null) {
+					message = auth.messages.Messages_14.replaceAll("/player/", event.getPlayer().getName());
+					player.sendMessage(message);
+				}
+				else {
+					message = auth.messages.Messages_13.replaceAll("/player/", event.getPlayer().getName());
+					player.sendMessage(message);
+				}
 			}
 		}
 	}
