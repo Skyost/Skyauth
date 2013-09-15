@@ -1,0 +1,47 @@
+# ########################## # 
+#                            #
+#    Skyauth Plugin YAML     #
+#                            #
+#   No configuration here !  #
+#                            #
+# ########################## #
+#                            #
+#  You can change 'default'  #
+#      in 'permissions'      #
+#    if you don't have a     #
+#     permission plugin.     #
+#                            #
+# ########################## #
+
+name: Skyauth
+main: com.skyost.auth.AuthPlugin
+description: An auth plugin.
+version: 0.4
+author: Skyost
+website: http://dev.bukkit.org/bukkit-plugins/skyauth/
+commands:
+ login:
+  description: Login on this server.
+  usage: Use /login <password> to login on this server.
+  permission: skyauth.login
+ register:
+  description: Register on this server.
+  usage: Use /register <password> <confirm> to register on this server.
+  permission: skyauth.register
+ change:
+  description: Change your password on this server.
+  usage: Use /change <code> <password> <confirm> to change your password on this server.
+  permission: skyauth.change
+permissions:
+ skyauth.login:
+  default: true
+  description: Allow you to login on this server.
+ skyauth.register:
+  default: true
+  description: Allow you to register on this server.
+ skyauth.change:
+  default: true
+  description: Allow you to change your password on this server.
+ skyauth.bypass:
+  default: false
+  description: Allow you to bypass the auth system.
