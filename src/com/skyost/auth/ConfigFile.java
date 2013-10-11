@@ -19,8 +19,7 @@ public class ConfigFile extends Config {
 	public int SessionLength = 7200;
 	public int MaxTry = 5;
 	
-	public boolean EncryptPassword = false;
-	public boolean CheckForUpdates = true;
+	public boolean EncryptPassword = true;
 	
 	public String PluginFile;
 }
