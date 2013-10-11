@@ -18,14 +18,14 @@ public class UpdateTask implements Runnable {
 	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void run() {
-		Updater updater = new Updater(auth, "skyauth", new File(auth.config.PluginFile), Updater.UpdateType.DEFAULT, true);
+		Updater updater = new Updater(auth, 65625, new File(auth.config.PluginFile), Updater.UpdateType.DEFAULT, true);
 		Updater.UpdateResult result = updater.getResult();
        	Player[] ops = Bukkit.getServer().getOnlinePlayers();
 	    switch(result) {
 	    case SUCCESS:
 	    	for(int i = 0; i < ops.length; i++) {
 				if(ops[i].isOp()) {
-					ops[i].sendMessage(ChatColor.GREEN + "[Skyauth] Update found: The update " + updater.getLatestVersionString() + " has been downloaded, so you just have to do a simple reload.");
+					ops[i].sendMessage(ChatColor.GREEN + "[Skyauth] Update found: The update " + updater.getLatestName() + " has been downloaded, so you just have to do a simple reload.");
 				}
 			}
 	       	break;
@@ -39,7 +39,7 @@ public class UpdateTask implements Runnable {
 	    case FAIL_DOWNLOAD:
 	    	for(int i = 0; i < ops.length; i++) {
 	    		if(ops[i].isOp()) {
-					ops[i].sendMessage(ChatColor.GREEN + "[Skyauth] Update found: There was an update found : " + updater.getLatestVersionString() + ".");
+					ops[i].sendMessage(ChatColor.GREEN + "[Skyauth] Update found: There was an update found : " + updater.getLatestName() + ".");
 				}
 			}
 	        break;
