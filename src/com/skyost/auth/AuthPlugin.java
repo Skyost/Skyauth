@@ -36,7 +36,9 @@ public class AuthPlugin extends JavaPlugin {
 			config.save();
 			startMetrics();
 			this.getServer().getPluginManager().registerEvents(new Listeners(this), this);
-			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new UpdateTask(this), 0, 8640000);
+			if(config.CheckForUpdates) {
+				this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new UpdateTask(this), 0, 8640000);
+			}
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();

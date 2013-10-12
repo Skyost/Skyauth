@@ -20,6 +20,7 @@ public class ConfigFile extends Config {
 	public int MaxTry = 5;
 	
 	public boolean EncryptPassword = true;
+	public boolean CheckForUpdates = true;
 	
 	public String PluginFile;
 }
