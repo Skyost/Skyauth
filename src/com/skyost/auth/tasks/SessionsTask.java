@@ -6,21 +6,19 @@ import com.skyost.auth.AuthPlugin;
 
 public class SessionsTask implements Runnable {
 	
-	private AuthPlugin auth;
 	private Player player;
 	
-	public SessionsTask(AuthPlugin Auth, Player Player) {
-		this.auth = Auth;
+	public SessionsTask(final Player Player) {
 		this.player = Player;
 	}
 
 	@Override
 	public void run() {
-		if(auth.sessions.get(player.getName()) != null) {
-			auth.sessions.remove(player.getName());
+		if(AuthPlugin.sessions.get(player.getName()) != null) {
+			AuthPlugin.sessions.remove(player.getName());
 		}
 		if(player.isOnline()) {
-			player.sendMessage(auth.messages.Messages_8);
+			player.sendMessage(AuthPlugin.messages.Messages_8);
 		}
 	}
 

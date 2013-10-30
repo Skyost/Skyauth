@@ -17,10 +17,9 @@ public class ConfigFile extends Config {
 	public HashMap<String, Integer> Codes = new HashMap<String, Integer>();
 	
 	public int SessionLength = 7200;
+	public int ForgiveDelay = 900;
 	public int MaxTry = 5;
 	
 	public boolean EncryptPassword = true;
 	public boolean CheckForUpdates = true;
-	
-	public String PluginFile;
 }
