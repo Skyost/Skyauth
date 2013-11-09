@@ -49,8 +49,6 @@ public class AuthPlugin extends JavaPlugin {
 	public final void onDisable() {
 		try {
 			reload();
-			stat.getConnection().close();
-			stat.close();
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -76,9 +74,11 @@ public class AuthPlugin extends JavaPlugin {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Skyauth] ForgiveDelay must be positive !");
 		}
 		if(config.ReloadDelay <= 0) {
-			
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Skyauth] ReloadDelay must be positive !");
 		}
-		stat = DriverManager.getConnection("jdbc:mysql://" + mysql.MySQL_Host + ":" + mysql.MySQL_Port + "/" + mysql.MySQL_Database, mysql.MySQL_Username, mysql.MySQL_Password).createStatement();
+		if(mysql.MySQL_Use) {
+			stat = DriverManager.getConnection("jdbc:mysql://" + mysql.MySQL_Host + ":" + mysql.MySQL_Port + "/" + mysql.MySQL_Database, mysql.MySQL_Username, mysql.MySQL_Password).createStatement();
+		}
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new SkyauthTasks(), 0, config.ReloadDelay * 20);
 		CommandExecutor executor = new CommandsExecutor();
 		this.getCommand("login").setExecutor(executor);
