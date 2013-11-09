@@ -1,11 +1,12 @@
-package com.skyost.auth;
+package fr.skyost.auth;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.bukkit.plugin.Plugin;
 
-import com.skyost.auth.utils.Config;
+import fr.skyost.auth.utils.Config;
 
 public class ConfigFile extends Config {
 	
@@ -19,13 +20,6 @@ public class ConfigFile extends Config {
 	
 	public boolean EncryptPassword = true;
 	public boolean CheckForUpdates = true;
-	
-	public boolean MySQL_Use = false;
-	public String MySQL_Username = "Skyost";
-	public String MySQL_Password = "MyGoodPassword";
-	public String MySQL_Host = "localhost";
-	public String MySQL_Database = "Database";
-	public int MySQL_Port = 3306;
 	
 	public ConfigFile(Plugin plugin) {
 		CONFIG_FILE = new File(plugin.getDataFolder(), "config.yml");

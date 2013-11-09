@@ -4,7 +4,7 @@
  * This class provides the means to safely and easily update a plugin, or check to see if it is updated using dev.bukkit.org
  */
 
-package com.skyost.auth.utils;
+package fr.skyost.auth.utils;
 
 import java.io.*;
 import java.net.MalformedURLException;

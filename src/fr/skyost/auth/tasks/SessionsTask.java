@@ -1,8 +1,8 @@
-package com.skyost.auth.tasks;
+package fr.skyost.auth.tasks;
 
 import org.bukkit.entity.Player;
 
-import com.skyost.auth.AuthPlugin;
+import fr.skyost.auth.AuthPlugin;
 
 public class SessionsTask implements Runnable {
 	

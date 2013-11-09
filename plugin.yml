@@ -14,7 +14,7 @@
 # ########################## #
 
 name: Skyauth
-main: com.skyost.auth.AuthPlugin
+main: fr.skyost.auth.AuthPlugin
 description: A lightweight auth plugin.
 version: 0.6
 author: Skyost
@@ -32,6 +32,10 @@ commands:
   description: Change your password on this server.
   usage: Use /change <code> <password> <confirm> to change your password on this server.
   permission: skyauth.change
+ reload-skyauth:
+  description: Reload the config / MySQL database.
+  usage: Use /reload-skyauth to reload your configuration or your MySQL database.
+  permission: skyauth.reload
 permissions:
  skyauth.login:
   default: true
@@ -42,6 +46,9 @@ permissions:
  skyauth.change:
   default: true
   description: Allow you to change your password on this server.
+ reload-skyauth:
+  default: false
+  description: Allow you to reload the config / MySQL database.
  skyauth.bypass:
   default: false
   description: Allow you to bypass the auth system.

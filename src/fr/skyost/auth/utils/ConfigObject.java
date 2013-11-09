@@ -1,4 +1,4 @@
-package com.skyost.auth.utils;
+package fr.skyost.auth.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

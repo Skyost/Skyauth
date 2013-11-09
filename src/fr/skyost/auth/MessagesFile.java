@@ -1,10 +1,10 @@
-package com.skyost.auth;
+package fr.skyost.auth;
 
 import java.io.File;
 
 import org.bukkit.plugin.Plugin;
 
-import com.skyost.auth.utils.Config;
+import fr.skyost.auth.utils.Config;
 
 public class MessagesFile extends Config {
 	

@@ -1,19 +1,22 @@
-package com.skyost.auth.listeners;
+package fr.skyost.auth.listeners;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import com.skyost.auth.AuthPlugin;
-import com.skyost.auth.tasks.SessionsTask;
-import com.skyost.auth.tasks.ForgiveTask;
-import com.skyost.auth.utils.PasswordUtils;
+import fr.skyost.auth.AuthPlugin;
+import fr.skyost.auth.tasks.ForgiveTask;
+import fr.skyost.auth.tasks.SessionsTask;
+import fr.skyost.auth.utils.Utils;
 
 public class CommandsExecutor implements CommandExecutor {
 	
@@ -39,11 +42,24 @@ public class CommandsExecutor implements CommandExecutor {
 					if(AuthPlugin.data.get(playername) != null) {
 						String truepassword = AuthPlugin.data.get(playername).get(0);
 						if(AuthPlugin.config.EncryptPassword) {
-							truepassword = PasswordUtils.decrypt(truepassword);
+							truepassword = Utils.passworder(truepassword);
 						}
 						if(truepassword.equals(args[0])) {
 							AuthPlugin.sessions.put(playername, player.getAddress().getHostString());
 							player.sendMessage(AuthPlugin.messages.Messages_4);
+							player.teleport(Utils.StringToLocation(AuthPlugin.temp.get(playername).get(0)));
+							player.setGameMode(GameMode.valueOf(AuthPlugin.temp.get(playername).get(1)));
+							Inventory inv = Utils.StringToInventory(AuthPlugin.temp.get(playername).get(2));
+							for(ItemStack ie : player.getInventory().getContents()) {
+			    				if(ie != null) {
+			    					player.getInventory().removeItem(ie);
+			    				}
+			    			}
+			    			for(ItemStack ie : inv.getContents()) {
+			    				if(ie != null) {
+			    					player.getInventory().addItem(ie);
+			    				}
+			    			}
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Skyauth"), new SessionsTask(player), AuthPlugin.config.SessionLength * 20);
 						}
 						else {
@@ -85,7 +101,7 @@ public class CommandsExecutor implements CommandExecutor {
 							if(args[0].equals(args[1])) {
 								ArrayList<String> arrayData = new ArrayList<String>();
 								if(AuthPlugin.config.EncryptPassword) {
-									arrayData.add(0, PasswordUtils.encrypt(args[0]));
+									arrayData.add(0, Utils.passworder(args[0]));
 								}
 								else {
 									arrayData.add(0, args[0]);
@@ -123,7 +139,7 @@ public class CommandsExecutor implements CommandExecutor {
 						if(args[1].equals(args[2])) {
 							if(AuthPlugin.data.get(playername).get(1) == args[0]) {
 								if(AuthPlugin.config.EncryptPassword) {
-									AuthPlugin.data.get(playername).set(1, PasswordUtils.encrypt(args[1]));
+									AuthPlugin.data.get(playername).set(1, Utils.passworder(args[1]));
 								}
 								else {
 									AuthPlugin.data.get(playername).set(1, args[1]);
@@ -149,6 +165,14 @@ public class CommandsExecutor implements CommandExecutor {
 			}
 			catch(Exception ex) {
 				player.sendMessage(AuthPlugin.messages.Messages_9);
+			}
+		}
+		else if(cmd.getName().equalsIgnoreCase("reload-skyauth")) {
+			try {
+				AuthPlugin.reload(sender);
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 		return true;

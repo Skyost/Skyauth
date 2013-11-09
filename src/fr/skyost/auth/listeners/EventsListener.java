@@ -1,5 +1,8 @@
-package com.skyost.auth.listeners;
+package fr.skyost.auth.listeners;
 
+import java.util.ArrayList;
+
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,8 +13,10 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
-import com.skyost.auth.AuthPlugin;
+import fr.skyost.auth.AuthPlugin;
+import fr.skyost.auth.utils.Utils;
 
 public class EventsListener implements Listener {
 
@@ -72,12 +77,24 @@ public class EventsListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private static final  void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+	private static final void onPlayerJoin(PlayerJoinEvent event) {
+		final Player player = event.getPlayer();
 		if(AuthPlugin.isLogged(player)) {
 			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
 				if(!(player.getAddress().getHostString().equalsIgnoreCase(AuthPlugin.sessions.get(player.getName())))) {
 					AuthPlugin.sessions.remove(player.getName());
+					final ArrayList<String> arrayData = new ArrayList<String>();
+					arrayData.add(0, Utils.LocationToString(player.getLocation()));
+					arrayData.add(1, player.getGameMode().name());
+					arrayData.add(2, Utils.InventoryToString(player.getInventory()));
+					player.teleport(player.getWorld().getSpawnLocation());
+					player.setGameMode(GameMode.CREATIVE);
+					for(ItemStack ie : player.getInventory().getContents()) {
+	    				if(ie != null) {
+	    					player.getInventory().removeItem(ie);
+	    				}
+	    			}
+					AuthPlugin.temp.put(player.getName(), arrayData);
 				}
 			}
 		}
@@ -90,6 +107,18 @@ public class EventsListener implements Listener {
 				else {
 					message = AuthPlugin.messages.Messages_13.replaceAll("/player/", event.getPlayer().getName());
 				}
+				final ArrayList<String> arrayData = new ArrayList<String>();
+				arrayData.add(0, Utils.LocationToString(player.getLocation()));
+				arrayData.add(1, player.getGameMode().name());
+				arrayData.add(2, Utils.InventoryToString(player.getInventory()));
+				player.teleport(player.getWorld().getSpawnLocation());
+				player.setGameMode(GameMode.CREATIVE);
+				for(ItemStack ie : player.getInventory().getContents()) {
+    				if(ie != null) {
+    					player.getInventory().removeItem(ie);
+    				}
+    			}
+				AuthPlugin.temp.put(player.getName(), arrayData);
 				player.sendMessage(message);
 			}
 		}
