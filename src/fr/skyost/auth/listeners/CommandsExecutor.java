@@ -60,6 +60,7 @@ public class CommandsExecutor implements CommandExecutor {
 			    					player.getInventory().addItem(ie);
 			    				}
 			    			}
+			    			AuthPlugin.temp.remove(playername);
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Skyauth"), new SessionsTask(player), AuthPlugin.config.SessionLength * 20);
 						}
 						else {
