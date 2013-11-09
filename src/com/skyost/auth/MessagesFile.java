@@ -7,10 +7,6 @@ import org.bukkit.plugin.Plugin;
 import com.skyost.auth.utils.Config;
 
 public class MessagesFile extends Config {
-	public MessagesFile(Plugin plugin) {
-		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");
-		CONFIG_HEADER = "Skyauth Messages";
-	}
 	
 	public String Messages_1 = "§4You must be logged in / registred !";
 	public String Messages_2 = "§4You are already logged in !";
@@ -29,5 +25,14 @@ public class MessagesFile extends Config {
 	public String Messages_15 = "§4/player/ has reached the max trials allowed !";
 	public String Messages_16 = "§4Sorry, you have reached your max trials ! Please wait a moment.";
 	public String Messages_17 = "§2You can retry to connect you now.";
+	
+	public MessagesFile(Plugin plugin) {
+		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");
+		CONFIG_HEADER = "##################################################### #";
+		CONFIG_HEADER += "\n               Skyauth Configuration                  #";
+		CONFIG_HEADER += "\n   See http://dev.bukkit.org/bukkit-plugins/skyauth   #";
+		CONFIG_HEADER += "\n              for more informations.                  #";
+		CONFIG_HEADER += "\n##################################################### #";
+	}
 	
 }

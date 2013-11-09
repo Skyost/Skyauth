@@ -1,5 +1,6 @@
 package com.skyost.auth.listeners;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -35,8 +36,8 @@ public class CommandsExecutor implements CommandExecutor {
 		if(cmd.getName().equalsIgnoreCase("login")) {
 			if(args.length == 1) {
 				if(!AuthPlugin.isLogged(player)) {
-					if(AuthPlugin.config.Accounts.get(playername) != null) {
-						String truepassword = AuthPlugin.config.Accounts.get(playername);
+					if(AuthPlugin.data.get(playername) != null) {
+						String truepassword = AuthPlugin.data.get(playername).get(0);
 						if(AuthPlugin.config.EncryptPassword) {
 							truepassword = PasswordUtils.decrypt(truepassword);
 						}
@@ -80,18 +81,19 @@ public class CommandsExecutor implements CommandExecutor {
 			try {
 				if(args.length == 2) {
 					if(!AuthPlugin.isLogged(player)) {
-						if(AuthPlugin.config.Accounts.get(playername) == null) {
+						if(AuthPlugin.data.get(playername) == null) {
 							if(args[0].equals(args[1])) {
+								ArrayList<String> arrayData = new ArrayList<String>();
 								if(AuthPlugin.config.EncryptPassword) {
-									AuthPlugin.config.Accounts.put(playername, PasswordUtils.encrypt(args[0]));
+									arrayData.add(0, PasswordUtils.encrypt(args[0]));
 								}
 								else {
-									AuthPlugin.config.Accounts.put(playername, args[0]);
+									arrayData.add(0, args[0]);
 								}
 								int code = new Random().nextInt(99999999);
-								AuthPlugin.config.Codes.put(playername, code);
-								AuthPlugin.config.save();
-								String message = AuthPlugin.messages.Messages_7.replaceAll("/code/", "" + code);
+								arrayData.add(1, String.valueOf(code));
+								AuthPlugin.data.put(playername, arrayData);
+								String message = AuthPlugin.messages.Messages_7.replaceAll("/code/", String.valueOf(code));
 								player.sendMessage(message);
 							}
 							else {
@@ -117,17 +119,16 @@ public class CommandsExecutor implements CommandExecutor {
 		else if(cmd.getName().equalsIgnoreCase("change")) {
 			try {
 				if(args.length == 3) {
-					if(AuthPlugin.config.Accounts.get(playername) != null) {
+					if(AuthPlugin.data.get(playername) != null) {
 						if(args[1].equals(args[2])) {
-							if(AuthPlugin.config.Codes.get(playername) == Integer.parseInt(args[0])) {
+							if(AuthPlugin.data.get(playername).get(1) == args[0]) {
 								if(AuthPlugin.config.EncryptPassword) {
-									AuthPlugin.config.Accounts.put(playername, PasswordUtils.encrypt(args[1]));
+									AuthPlugin.data.get(playername).set(1, PasswordUtils.encrypt(args[1]));
 								}
 								else {
-									AuthPlugin.config.Accounts.put(playername, args[1]);
+									AuthPlugin.data.get(playername).set(1, args[1]);
 								}
 								AuthPlugin.sessions.remove(playername);
-								AuthPlugin.config.save();
 								player.sendMessage(AuthPlugin.messages.Messages_10);
 							}
 							else {
