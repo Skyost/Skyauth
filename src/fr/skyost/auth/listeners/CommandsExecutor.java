@@ -47,20 +47,22 @@ public class CommandsExecutor implements CommandExecutor {
 						if(truepassword.equals(args[0])) {
 							AuthPlugin.sessions.put(playername, player.getAddress().getHostString());
 							player.sendMessage(AuthPlugin.messages.Messages_4);
-							player.teleport(Utils.StringToLocation(AuthPlugin.temp.get(playername).get(0)));
-							player.setGameMode(GameMode.valueOf(AuthPlugin.temp.get(playername).get(1)));
-							Inventory inv = Utils.StringToInventory(AuthPlugin.temp.get(playername).get(2));
-							for(ItemStack ie : player.getInventory().getContents()) {
-			    				if(ie != null) {
-			    					player.getInventory().removeItem(ie);
-			    				}
-			    			}
-			    			for(ItemStack ie : inv.getContents()) {
-			    				if(ie != null) {
-			    					player.getInventory().addItem(ie);
-			    				}
-			    			}
-			    			AuthPlugin.temp.remove(playername);
+							if(AuthPlugin.temp.get(playername) != null) {
+								player.teleport(Utils.StringToLocation(AuthPlugin.temp.get(playername).get(0)));
+								player.setGameMode(GameMode.valueOf(AuthPlugin.temp.get(playername).get(1)));
+								Inventory inv = Utils.StringToInventory(AuthPlugin.temp.get(playername).get(2));
+								for(ItemStack ie : player.getInventory().getContents()) {
+				    				if(ie != null) {
+				    					player.getInventory().removeItem(ie);
+				    				}
+				    			}
+				    			for(ItemStack ie : inv.getContents()) {
+				    				if(ie != null) {
+				    					player.getInventory().addItem(ie);
+				    				}
+				    			}
+				    			AuthPlugin.temp.remove(playername);
+							}
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Skyauth"), new SessionsTask(player), AuthPlugin.config.SessionLength * 20);
 						}
 						else {
