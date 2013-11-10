@@ -25,6 +25,7 @@ public class MessagesFile extends Config {
 	public String Messages_15 = "§4/player/ has reached the max trials allowed !";
 	public String Messages_16 = "§4Sorry, you have reached your max trials ! Please wait a moment.";
 	public String Messages_17 = "§2You can retry to connect you now.";
+	public String Messages_18 = "§2You have been logged out !";
 	
 	public MessagesFile(Plugin plugin) {
 		CONFIG_FILE = new File(plugin.getDataFolder(), "messages.yml");

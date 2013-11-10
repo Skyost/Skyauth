@@ -38,8 +38,8 @@ public class CommandsExecutor implements CommandExecutor {
 		}
 		if(cmd.getName().equalsIgnoreCase("login")) {
 			if(args.length == 1) {
-				if(!AuthPlugin.isLogged(player)) {
-					if(AuthPlugin.data.get(playername) != null) {
+				if(AuthPlugin.data.get(playername) != null) {
+					if(!AuthPlugin.isLogged(player)) {
 						String truepassword = AuthPlugin.data.get(playername).get(0);
 						if(AuthPlugin.config.EncryptPassword) {
 							truepassword = Utils.passworder(truepassword);
@@ -52,16 +52,16 @@ public class CommandsExecutor implements CommandExecutor {
 								player.setGameMode(GameMode.valueOf(AuthPlugin.temp.get(playername).get(1)));
 								Inventory inv = Utils.StringToInventory(AuthPlugin.temp.get(playername).get(2));
 								for(ItemStack ie : player.getInventory().getContents()) {
-				    				if(ie != null) {
-				    					player.getInventory().removeItem(ie);
-				    				}
-				    			}
-				    			for(ItemStack ie : inv.getContents()) {
-				    				if(ie != null) {
-				    					player.getInventory().addItem(ie);
-				    				}
-				    			}
-				    			AuthPlugin.temp.remove(playername);
+					    			if(ie != null) {
+					    				player.getInventory().removeItem(ie);
+					    			}
+					    		}
+					    		for(ItemStack ie : inv.getContents()) {
+					    			if(ie != null) {
+					    				player.getInventory().addItem(ie);
+					    			}
+					    		}
+					   			AuthPlugin.temp.remove(playername);
 							}
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Skyauth"), new SessionsTask(player), AuthPlugin.config.SessionLength * 20);
 						}
@@ -85,22 +85,48 @@ public class CommandsExecutor implements CommandExecutor {
 						}
 					}
 					else {
-						player.sendMessage(AuthPlugin.messages.Messages_12);
+						player.sendMessage(AuthPlugin.messages.Messages_2);
 					}
 				}
 				else {
-					player.sendMessage(AuthPlugin.messages.Messages_2);
+					player.sendMessage(AuthPlugin.messages.Messages_12);
 				}
 			}
 			else {
 				return false;
 			}
 		}
+		else if(cmd.getName().equalsIgnoreCase("logout")) {
+			if(AuthPlugin.data.get(playername) != null) {
+				if(AuthPlugin.isLogged(player)) {
+					AuthPlugin.sessions.remove(player.getName());
+					final ArrayList<String> arrayData = new ArrayList<String>();
+					arrayData.add(0, Utils.LocationToString(player.getLocation()));
+					arrayData.add(1, player.getGameMode().name());
+					arrayData.add(2, Utils.InventoryToString(player.getInventory()));
+					player.teleport(player.getWorld().getSpawnLocation());
+					player.setGameMode(GameMode.CREATIVE);
+					for(ItemStack ie : player.getInventory().getContents()) {
+						if(ie != null) {
+							player.getInventory().removeItem(ie);
+						}
+					}
+					AuthPlugin.temp.put(player.getName(), arrayData);
+					player.sendMessage(AuthPlugin.messages.Messages_18);
+				}
+				else {
+					player.sendMessage(AuthPlugin.messages.Messages_1);
+				}
+			}
+			else {
+				player.sendMessage(AuthPlugin.messages.Messages_12);
+			}
+		}
 		else if(cmd.getName().equalsIgnoreCase("register")) {
 			try {
 				if(args.length == 2) {
-					if(!AuthPlugin.isLogged(player)) {
-						if(AuthPlugin.data.get(playername) == null) {
+					if(AuthPlugin.data.get(playername) == null) {
+						if(!AuthPlugin.isLogged(player)) {
 							if(args[0].equals(args[1])) {
 								ArrayList<String> arrayData = new ArrayList<String>();
 								if(AuthPlugin.config.EncryptPassword) {
@@ -120,11 +146,11 @@ public class CommandsExecutor implements CommandExecutor {
 							}
 						}
 						else {
-							player.sendMessage(AuthPlugin.messages.Messages_5);
+							player.sendMessage(AuthPlugin.messages.Messages_2);
 						}
 					}
 					else {
-						player.sendMessage(AuthPlugin.messages.Messages_2);
+						player.sendMessage(AuthPlugin.messages.Messages_5);
 					}
 				}
 				else {
@@ -136,43 +162,38 @@ public class CommandsExecutor implements CommandExecutor {
 			}
 		}
 		else if(cmd.getName().equalsIgnoreCase("change")) {
-			try {
-				if(args.length == 3) {
-					if(AuthPlugin.data.get(playername) != null) {
-						if(args[1].equals(args[2])) {
-							if(AuthPlugin.data.get(playername).get(1) == args[0]) {
-								if(AuthPlugin.config.EncryptPassword) {
-									AuthPlugin.data.get(playername).set(1, Utils.passworder(args[1]));
-								}
-								else {
-									AuthPlugin.data.get(playername).set(1, args[1]);
-								}
-								AuthPlugin.sessions.remove(playername);
-								player.sendMessage(AuthPlugin.messages.Messages_10);
+			if(args.length == 3) {
+				if(AuthPlugin.data.get(playername) != null) {
+					if(args[1].equals(args[2])) {
+						if(AuthPlugin.data.get(playername).get(1).equals(args[0])) {
+							if(AuthPlugin.config.EncryptPassword) {
+								AuthPlugin.data.get(playername).set(0, Utils.passworder(args[1]));
 							}
 							else {
-								player.sendMessage(AuthPlugin.messages.Messages_9);
+								AuthPlugin.data.get(playername).set(0, args[1]);
 							}
+							AuthPlugin.sessions.remove(playername);
+							player.sendMessage(AuthPlugin.messages.Messages_10);
 						}
 						else {
-							player.sendMessage(AuthPlugin.messages.Messages_6);
+							player.sendMessage(AuthPlugin.messages.Messages_9);
 						}
 					}
 					else {
-						player.sendMessage(AuthPlugin.messages.Messages_12);
+						player.sendMessage(AuthPlugin.messages.Messages_6);
 					}
 				}
 				else {
-					return false;
+					player.sendMessage(AuthPlugin.messages.Messages_12);
 				}
 			}
-			catch(Exception ex) {
-				player.sendMessage(AuthPlugin.messages.Messages_9);
+			else {
+				return false;
 			}
 		}
 		else if(cmd.getName().equalsIgnoreCase("reload-skyauth")) {
 			try {
-				AuthPlugin.reload(sender);
+				AuthPlugin.reload(player);
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();

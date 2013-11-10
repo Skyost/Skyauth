@@ -3,6 +3,7 @@ package fr.skyost.auth.listeners;
 import java.util.ArrayList;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,8 +38,10 @@ public class EventsListener implements Listener {
 	private static final  void onPlayerMoveEvent(PlayerMoveEvent event) {
 		if(!AuthPlugin.isLogged(event.getPlayer())) {
 			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
-				if(event.getFrom().getBlockX() != event.getTo().getBlockX() || event.getFrom().getBlockY() != event.getTo().getBlockY() || event.getFrom().getBlockZ() != event.getTo().getBlockZ()) {
-					event.setTo(event.getFrom());
+				final Location from = event.getFrom();
+				final Location to = event.getTo();
+				if(from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.getBlockY() != to.getBlockY()) {
+					event.setTo(from);
 					event.getPlayer().sendMessage(AuthPlugin.messages.Messages_1);
 					return;
 				}

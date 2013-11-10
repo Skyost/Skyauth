@@ -16,14 +16,20 @@
 name: Skyauth
 main: fr.skyost.auth.AuthPlugin
 description: A lightweight auth plugin.
-version: 0.5.1
+version: 0.6
 author: Skyost
 website: http://dev.bukkit.org/bukkit-plugins/skyauth/
 commands:
  login:
+  aliases: [log-in]
   description: Login on this server.
   usage: Use /login <password> to login on this server.
   permission: skyauth.login
+ logout:
+  aliases: [log-out]
+  description: Logout from this server.
+  usage: Use /logout to logout from this server.
+  permission: skyauth.logout
  register:
   description: Register on this server.
   usage: Use /register <password> <confirm> to register on this server.
@@ -40,6 +46,9 @@ permissions:
  skyauth.login:
   default: true
   description: Allow you to login on this server.
+ skyauth.logout:
+  default: true
+  description: Allow you to logout from this server.
  skyauth.register:
   default: true
   description: Allow you to register on this server.
@@ -47,7 +56,7 @@ permissions:
   default: true
   description: Allow you to change your password on this server.
  reload-skyauth:
-  default: false
+  default: op
   description: Allow you to reload the config / MySQL database.
  skyauth.bypass:
   default: false

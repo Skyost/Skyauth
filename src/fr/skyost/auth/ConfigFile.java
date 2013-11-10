@@ -11,6 +11,7 @@ import fr.skyost.auth.utils.Config;
 public class ConfigFile extends Config {
 	
 	public HashMap<String, ArrayList<String>> Data = new HashMap<String, ArrayList<String>>();
+	public HashMap<String, ArrayList<String>> Temp = new HashMap<String, ArrayList<String>>();
 	
 	public int SessionLength = 7200;
 	public int ForgiveDelay = 900;
