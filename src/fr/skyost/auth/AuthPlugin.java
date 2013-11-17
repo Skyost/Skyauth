@@ -98,6 +98,7 @@ public class AuthPlugin extends JavaPlugin {
 		}
 		if(useMySQL) {
 			stat = DriverManager.getConnection("jdbc:mysql://" + mysql.MySQL_Host + ":" + mysql.MySQL_Port + "/" + mysql.MySQL_Database, mysql.MySQL_Username, mysql.MySQL_Password).createStatement();
+			stat.execute("CREATE TABLE IF NOT EXISTS Skyauth_Data(User TINYTEXT, Password TINYTEXT, Code NUMERIC(8))");
 		}
 		for(Entry<String, ArrayList<String>> entry : config.Temp.entrySet()) {
 			temp.put(entry.getKey(), entry.getValue());
@@ -152,9 +153,9 @@ public class AuthPlugin extends JavaPlugin {
 			}
 		}
 		else {
-			AuthPlugin.data.putAll(AuthPlugin.config.Data);
-			AuthPlugin.config.Data.putAll(AuthPlugin.data);
-			AuthPlugin.config.save();
+			data.putAll(config.Data);
+			config.Data.putAll(data);
+			config.save();
 		}
 	}
 	
