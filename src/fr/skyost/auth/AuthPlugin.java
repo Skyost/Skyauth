@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -31,6 +33,8 @@ public class AuthPlugin extends JavaPlugin {
 	
 	private static Statement stat;
 	private static boolean useMySQL;
+	
+	public static final List<String> availableAlgorithms = Arrays.asList(new String[] {"PLAIN", "CHAR", "MD2", "MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512"});
 	
 	public static final HashMap<String, ArrayList<String>> data = new HashMap<String, ArrayList<String>>();
 	public static final HashMap<String, ArrayList<String>> temp = new HashMap<String, ArrayList<String>>();
@@ -77,6 +81,7 @@ public class AuthPlugin extends JavaPlugin {
 	}
 	
 	private final void init() throws Exception {
+		final CommandSender console = Bukkit.getConsoleSender();
 		config = new ConfigFile(this);
 		config.init();
 		messages = new MessagesFile(this);
@@ -88,13 +93,27 @@ public class AuthPlugin extends JavaPlugin {
 			new Updater(this, 65625, this.getFile(), Updater.UpdateType.DEFAULT, true);
 		}
 		if(config.SessionLength <= 0) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Skyauth] SessionLength must be positive !");
+			console.sendMessage(ChatColor.RED + "[Skyauth] SessionLength must be positive !");
+			config.SessionLength = 7200;
 		}
 		if(config.ForgiveDelay <= 0) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Skyauth] ForgiveDelay must be positive !");
+			console.sendMessage(ChatColor.RED + "[Skyauth] ForgiveDelay must be positive !");
+			config.ForgiveDelay = 900;
+		}
+		if(config.MaxTry <= 0) {
+			console.sendMessage(ChatColor.RED + "[Skyauth] MaxTry must be positive !");
+			config.ForgiveDelay = 5;
 		}
 		if(config.ReloadDelay <= 0) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Skyauth] ReloadDelay must be positive !");
+			console.sendMessage(ChatColor.RED + "[Skyauth] ReloadDelay must be positive !");
+			config.ForgiveDelay = 300;
+		}
+		if(!availableAlgorithms.contains(config.PasswordAlgorithm)) {
+			console.sendMessage(ChatColor.RED + "[Skyauth] PasswordAlgorithm must be a valid algorithm :");
+			for(String algo : availableAlgorithms) {
+				console.sendMessage(ChatColor.RED + algo);
+			}
+			config.PasswordAlgorithm = "MD5";
 		}
 		if(useMySQL) {
 			stat = DriverManager.getConnection("jdbc:mysql://" + mysql.MySQL_Host + ":" + mysql.MySQL_Port + "/" + mysql.MySQL_Database, mysql.MySQL_Username, mysql.MySQL_Password).createStatement();
@@ -126,12 +145,7 @@ public class AuthPlugin extends JavaPlugin {
     			
     		@Override
     		public String getColumnName() {
-    			if(config.EncryptPassword) {
-    				return "Yes";
-    			}
-    			else {
-    				return "No";
-    			}
+    			return config.PasswordAlgorithm;
     		}
     			
     	});
@@ -154,32 +168,9 @@ public class AuthPlugin extends JavaPlugin {
 		}
 		else {
 			data.putAll(config.Data);
-			config.Data.putAll(data);
+			config.Data = data;
 			config.save();
 		}
-	}
-	
-	public static void reload(CommandSender sender) throws Exception {
-		sender.sendMessage(ChatColor.GOLD + "Reloading...");
-		if(useMySQL()) {
-			final ArrayList<String> arrayData = new ArrayList<String>();
-			ResultSet rs = stat.executeQuery("SELECT User, Password, Code FROM Skyauth_Data");
-			while(rs.next()) {
-				arrayData.add(0, rs.getString("Password"));
-				arrayData.add(1, rs.getString("Code"));
-				data.put(rs.getString("User"), arrayData);
-			}
-			stat.executeUpdate("TRUNCATE TABLE Skyauth_Data");
-			for(Entry<String, ArrayList<String>> entry : data.entrySet()) {
-				stat.executeUpdate("INSERT INTO Skyauth_Data(User, Password, Code) VALUES('" + entry.getKey() + "', '" + entry.getValue().get(0) + "', '" + entry.getValue().get(1) + "')");
-			}
-		}
-		else {
-			AuthPlugin.data.putAll(AuthPlugin.config.Data);
-			AuthPlugin.config.Data.putAll(AuthPlugin.data);
-			AuthPlugin.config.save();
-		}
-		sender.sendMessage(ChatColor.GREEN + "Done !");
 	}
 	
 	public static final boolean useMySQL() {

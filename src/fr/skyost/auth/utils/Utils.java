@@ -1,5 +1,7 @@
 package fr.skyost.auth.utils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -10,23 +12,81 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import fr.skyost.auth.AuthPlugin;
+
 @SuppressWarnings("deprecation")
 public class Utils {
 	
-	public static final String passworder(String password) {
-		String crypto = "";
-		for(int i = 0; i < password.length(); i++)  {
-			int c = password.charAt(i)^48;  
-			crypto += (char)c; 
+	public static final boolean isCorrect(final String password, final String truePassword) throws NoSuchAlgorithmException {
+		String blankPassword = "";
+		final String algorithm = AuthPlugin.config.PasswordAlgorithm.toUpperCase();
+		switch(algorithm) {
+		case "CHAR":
+			for(int i = 0; i < password.length(); i++)  {
+				int c = password.charAt(i) ^ 48;  
+				blankPassword += (char)c; 
+			}
+			break;
+		case "PLAIN":
+			blankPassword = password;
+			break;
+		case "MD2":
+		case "MD5":
+		case "SHA-1":
+		case "SHA-256":
+		case "SHA-384":
+		case "SHA-512":
+			MessageDigest md = MessageDigest.getInstance(algorithm);
+			byte[] array = md.digest(password.getBytes());
+			StringBuffer sb = new StringBuffer();
+			for(int i = 0; i < array.length; ++i) {
+				sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+			}
+			blankPassword = sb.toString();
+			break;
 		}
-		return crypto;
+		if(blankPassword.equals(truePassword)) {
+			return true;
+		}
+		return false;
 	}
 	
-	public static final String LocationToString(Location loc) {
+	public static final String encrypt(final String string) throws NoSuchAlgorithmException {
+		String blankString = "";
+		final String algorithm = AuthPlugin.config.PasswordAlgorithm.toUpperCase();
+		switch(algorithm) {
+		case "CHAR":
+			for(int i = 0; i < string.length(); i++)  {
+				int c = string.charAt(i) ^ 48;  
+				blankString += (char)c; 
+			}
+			break;
+		case "PLAIN":
+			blankString = string;
+			break;
+		case "MD2":
+		case "MD5":
+		case "SHA-1":
+		case "SHA-256":
+		case "SHA-384":
+		case "SHA-512":
+			MessageDigest md = MessageDigest.getInstance(algorithm);
+			byte[] array = md.digest(string.getBytes());
+			StringBuffer sb = new StringBuffer();
+			for(int i = 0; i < array.length; ++i) {
+				sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+			}
+			blankString = sb.toString();
+			break;
+		}
+		return blankString;
+	}
+	
+	public static final String LocationToString(final Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ();
 	}
 	
-	public static final Location StringToLocation(String loc) {
+	public static final Location StringToLocation(final String loc) {
 		String[] arrayLoc = loc.split(":");
 		return new Location(Bukkit.getWorld(arrayLoc[0]), Double.parseDouble(arrayLoc[1]), Double.parseDouble(arrayLoc[2]), Double.parseDouble(arrayLoc[3]));
 	}

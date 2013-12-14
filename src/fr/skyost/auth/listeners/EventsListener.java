@@ -22,12 +22,13 @@ import fr.skyost.auth.utils.Utils;
 public class EventsListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public static final void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
-		if(!AuthPlugin.isLogged(event.getPlayer())) {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
+	public final void onPlayerCommandPreprocessEvent(final PlayerCommandPreprocessEvent event) {
+		final Player player = event.getPlayer();
+		if(!AuthPlugin.isLogged(player)) {
+			if(!player.hasPermission("skyauth.bypass")) {
 				String message = event.getMessage().toUpperCase();
 				if(!(message.startsWith("/REGISTER") || message.startsWith("/LOGIN") || message.startsWith("/CHANGE"))) {
-					event.getPlayer().sendMessage(AuthPlugin.messages.Messages_1);
+					player.sendMessage(AuthPlugin.messages.Messages_1);
 					event.setCancelled(true);
 				}
 			}
@@ -35,14 +36,15 @@ public class EventsListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private static final  void onPlayerMoveEvent(PlayerMoveEvent event) {
-		if(!AuthPlugin.isLogged(event.getPlayer())) {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
+	private final void onPlayerMoveEvent(final PlayerMoveEvent event) {
+		final Player player = event.getPlayer();
+		if(!AuthPlugin.isLogged(player)) {
+			if(!player.hasPermission("skyauth.bypass")) {
 				final Location from = event.getFrom();
 				final Location to = event.getTo();
 				if(from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.getBlockY() != to.getBlockY()) {
 					event.setTo(from);
-					event.getPlayer().sendMessage(AuthPlugin.messages.Messages_1);
+					player.sendMessage(AuthPlugin.messages.Messages_1);
 					return;
 				}
 			}
@@ -50,40 +52,43 @@ public class EventsListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private static final  void onPlayerDropItem(PlayerDropItemEvent event) {
-		if(!AuthPlugin.isLogged(event.getPlayer())) {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
-				event.getPlayer().sendMessage(AuthPlugin.messages.Messages_1);
+	private final void onPlayerDropItem(final PlayerDropItemEvent event) {
+		final Player player = event.getPlayer();
+		if(!AuthPlugin.isLogged(player)) {
+			if(!player.hasPermission("skyauth.bypass")) {
+				player.sendMessage(AuthPlugin.messages.Messages_1);
 				event.setCancelled(true);
 			}
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private static final  void onPlayerChat(AsyncPlayerChatEvent event) {
-		if(!AuthPlugin.isLogged(event.getPlayer())) {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
-				event.getPlayer().sendMessage(AuthPlugin.messages.Messages_1);
+	private final void onPlayerChat(final AsyncPlayerChatEvent event) {
+		final Player player = event.getPlayer();
+		if(!AuthPlugin.isLogged(player)) {
+			if(!player.hasPermission("skyauth.bypass")) {
+				player.sendMessage(AuthPlugin.messages.Messages_1);
 				event.setCancelled(true);
 			}
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private static final  void onPlayerInteract(PlayerInteractEvent event) {
-		if(!AuthPlugin.isLogged(event.getPlayer())) {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
-				event.getPlayer().sendMessage(AuthPlugin.messages.Messages_1);
+	private final void onPlayerInteract(final PlayerInteractEvent event) {
+		final Player player = event.getPlayer();
+		if(!AuthPlugin.isLogged(player)) {
+			if(!player.hasPermission("skyauth.bypass")) {
+				player.sendMessage(AuthPlugin.messages.Messages_1);
 				event.setCancelled(true);
 			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	private static final void onPlayerJoin(PlayerJoinEvent event) {
+	private final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		if(AuthPlugin.isLogged(player)) {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
+			if(!player.hasPermission("skyauth.bypass")) {
 				if(!(player.getAddress().getHostString().equalsIgnoreCase(AuthPlugin.sessions.get(player.getName())))) {
 					AuthPlugin.sessions.remove(player.getName());
 					final ArrayList<String> arrayData = new ArrayList<String>();
@@ -102,13 +107,13 @@ public class EventsListener implements Listener {
 			}
 		}
 		else {
-			if(!event.getPlayer().hasPermission("skyauth.bypass")) {
+			if(!player.hasPermission("skyauth.bypass")) {
 				String message;
 				if(AuthPlugin.config.Data.get(player.getName()) != null) {
-					message = AuthPlugin.messages.Messages_14.replaceAll("/player/", event.getPlayer().getName());
+					message = AuthPlugin.messages.Messages_14.replaceAll("/player/", player.getName());
 				}
 				else {
-					message = AuthPlugin.messages.Messages_13.replaceAll("/player/", event.getPlayer().getName());
+					message = AuthPlugin.messages.Messages_13.replaceAll("/player/", player.getName());
 				}
 				final ArrayList<String> arrayData = new ArrayList<String>();
 				arrayData.add(0, Utils.LocationToString(player.getLocation()));

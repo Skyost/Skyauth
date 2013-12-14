@@ -13,13 +13,14 @@ public class ConfigFile extends Config {
 	public HashMap<String, ArrayList<String>> Data = new HashMap<String, ArrayList<String>>();
 	public HashMap<String, ArrayList<String>> Temp = new HashMap<String, ArrayList<String>>();
 	
+	public String PasswordAlgorithm = "MD5";
+	
 	public int SessionLength = 7200;
 	public int ForgiveDelay = 900;
 	public int MaxTry = 5;
 	
 	public int ReloadDelay = 300;
 	
-	public boolean EncryptPassword = true;
 	public boolean CheckForUpdates = true;
 	
 	public ConfigFile(Plugin plugin) {

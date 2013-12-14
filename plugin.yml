@@ -16,7 +16,7 @@
 name: Skyauth
 main: fr.skyost.auth.AuthPlugin
 description: A lightweight auth plugin.
-version: 0.6.1
+version: 0.7
 author: Skyost
 website: http://dev.bukkit.org/bukkit-plugins/skyauth/
 commands:
@@ -39,6 +39,7 @@ commands:
   usage: Use /change <code> <password> <confirm> to change your password on this server.
   permission: skyauth.change
  reload-skyauth:
+  aliases: [skyauth-reload]
   description: Reload the config / MySQL database.
   usage: Use /reload-skyauth to reload your configuration or your MySQL database.
   permission: skyauth.reload
