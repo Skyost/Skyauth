@@ -23,7 +23,7 @@ import fr.skyost.auth.listeners.CommandsExecutor;
 import fr.skyost.auth.listeners.EventsListener;
 import fr.skyost.auth.tasks.SkyauthTasks;
 import fr.skyost.auth.utils.Metrics;
-import fr.skyost.auth.utils.Updater;
+import fr.skyost.auth.utils.Skyupdater;
 import fr.skyost.auth.utils.Utils;
 
 public class AuthPlugin extends JavaPlugin {
@@ -90,7 +90,7 @@ public class AuthPlugin extends JavaPlugin {
 		mysql.init();
 		useMySQL = mysql.MySQL_Use;
 		if(config.CheckForUpdates) {
-			new Updater(this, 65625, this.getFile(), Updater.UpdateType.DEFAULT, true);
+			new Skyupdater(this, 65625, this.getFile(), true, true);
 		}
 		if(config.SessionLength <= 0) {
 			console.sendMessage(ChatColor.RED + "[Skyauth] SessionLength must be positive !");
