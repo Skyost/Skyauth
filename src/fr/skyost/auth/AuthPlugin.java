@@ -121,8 +121,8 @@ public class AuthPlugin extends JavaPlugin {
 		}
 		for(Entry<String, ArrayList<String>> entry : config.Temp.entrySet()) {
 			temp.put(entry.getKey(), entry.getValue());
-			config.Temp.remove(entry.getKey());
 		}
+		config.Temp.clear();
 		config.save();
 		Bukkit.getPluginManager().registerEvents(new EventsListener(), this);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new SkyauthTasks(), 0, config.ReloadDelay * 20);

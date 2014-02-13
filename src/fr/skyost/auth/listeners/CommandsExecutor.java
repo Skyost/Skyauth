@@ -21,7 +21,7 @@ import fr.skyost.auth.utils.Utils;
 public class CommandsExecutor implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		Player player = null;
 		String playername = null;
 		if(sender instanceof Player) {
